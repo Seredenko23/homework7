@@ -5,6 +5,8 @@ const userBtn = document.getElementById('users')
 const usersList = document.getElementById('usersList')
 const postsList = document.getElementById('postsList')
 const commentsList = document.getElementById('commentsList')
+const mainContent = document.getElementById('mainContent')
+let alert
 
 let users
 let comments
@@ -48,8 +50,9 @@ function getUsers () {
       	listEl.classList.add('list-group-item', 'list-group-item-action')
       	usersList.append(listEl)
       })
+      createAlert('Here is yours request!', 'success')
     }).catch(err => {
-      console.log(err)
+      createAlert(err, 'error')
     })
 }
 
@@ -92,10 +95,14 @@ function getUserPosts (userId) {
     			.getElementsByClassName('spinner-border')[0].remove()
     			postsList.children[ind].append(badge)
     		})
+    		createAlert('Here is yours request!', 'success')
+    	})
+    	.catch(err => {
+     	 createAlert(err, 'error')
     	})
     })
     .catch(err => {
-      console.log(err)
+      createAlert(err, 'error')
     })
 }
 
@@ -122,13 +129,32 @@ function getComments (postId) {
       	 'justify-center')
       	commentsList.append(listEl)
       })
+      createAlert('Here is yours request!', 'success')
     }).catch(err => {
-      console.log(err)
+      createAlert(err, 'error')
     })
 }
 
 function commentsRequest (postId) {
   return request('GET', `https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
+}
+
+function createAlert (text, type) {
+  if (alert) alert.remove()
+  alert = document.createElement('div')
+  alert.classList.add('alert')
+  alert.textContent = text
+  switch (type) {
+    case 'error':
+      alert.classList.add('alert-danger')
+      break
+    case 'success':
+      alert.classList.add('alert-success')
+      break
+    default:
+      alert.classList.add('alert alert-primary')
+  }
+  mainContent.prepend(alert)
 }
 
 function deleteChildren (elem) {
