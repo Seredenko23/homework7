@@ -14,7 +14,7 @@ module.exports = {
         use: [
           {
             loader: 'html-loader',
-            options: { minimize: true }
+            options: { minimize: false }
           }
         ]
       },
@@ -32,9 +32,9 @@ module.exports = {
     ]
   },
   plugins: [
-     new HtmlWebpackPlugin({
-       template: './src/index.html',
-       filename: './index.html'
-     })
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: './index.html'
+    })
   ]
 }
