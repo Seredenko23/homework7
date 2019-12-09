@@ -1,19 +1,20 @@
-const utility = require('./utilities')
+import utility from './utilities'
 
 function request (method, url) {
-  return new Promise((resolve, reject) => {
-	  const xhr = new XMLHttpRequest()
-	  xhr.open(method, url)
-	  xhr.onload = resolve
-	  xhr.onerror = reject
-	  xhr.send()
-  })
+	let BASE_URL = 'https://jsonplaceholder.typicode.com'
+	let response;
+	return new Promise((resolve, reject) => {
+		const xhr = new XMLHttpRequest()
+		xhr.open(method, BASE_URL + url)
+		xhr.onload = (e) => resolve(JSON.parse(e.target.responseText))
+		xhr.onerror = reject
+		xhr.send()
+	})
 }
 
 async function getUsers (elem) {
-  let response = await request('GET', 'https://jsonplaceholder.typicode.com/users')
- 	response = JSON.parse(response.target.responseText)
  	try {
+ 	let response = await request('GET', '/users')
     utility.deleteChildren(elem)
     response.forEach((el) => {
       const listEl = document.createElement('a')
@@ -30,11 +31,9 @@ async function getUsers (elem) {
 }
 
 async function getUserPosts (userId, elem) {
-  let response = await request('GET', `https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
-  response = JSON.parse(response.target.responseText)
   try {
+	let response = await request('GET', `/posts?userId=${userId}`)
   	utility.deleteChildren(elem)
-  	const promiseArr = []
   	response.forEach(async (el, ind) => {
     	const listEl = document.createElement('a')
     	listEl.textContent = el.title
@@ -54,7 +53,6 @@ async function getUserPosts (userId, elem) {
     	elem.append(listEl)
 
     	let value = await commentsRequest(el.id)
-    	value = JSON.parse(value.target.responseText)
     	const badge = document.createElement('span')
    		badge.classList.add('badge', 'badge-primary')
     	badge.textContent = value.length
@@ -67,9 +65,8 @@ async function getUserPosts (userId, elem) {
 }
 
 async function getComments (postId, elem) {
-  let response = await request('GET', `https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
-  response = JSON.parse(response.target.responseText)
   try {
+	let response = await request('GET', `/comments?postId=${postId}`)
     utility.deleteChildren(elem)
     response.forEach((el) => {
       const listEl = document.createElement('span')
@@ -85,7 +82,7 @@ async function getComments (postId, elem) {
 }
 
 function commentsRequest (postId) {
-  return request('GET', `https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
+  return request('GET', `/comments?postId=${postId}`)
 }
 
 export { getUsers, getUserPosts, getComments }

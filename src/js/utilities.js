@@ -1,5 +1,16 @@
 let alert
 
+function request (method, url) {
+  let BASE_URL = 'https://jsonplaceholder.typicode.com'
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, BASE_URL + url)
+    xhr.onload = resolve
+    xhr.onerror = reject
+    xhr.send()
+  })
+}
+
 function deleteChildren (elem) {
   while (elem.firstChild) {
     elem.firstChild.remove()
@@ -24,4 +35,4 @@ function createAlert (text, type) {
   mainContent.prepend(alert)
 }
 
-export { createAlert, deleteChildren }
+export default { createAlert, deleteChildren, request, }
